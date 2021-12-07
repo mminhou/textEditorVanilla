@@ -1,71 +1,90 @@
 import Component from "../core/Component";
 import {$} from "../utils/util"
-import Nav from "./Nav";
+
+import Notepad from "./Notepad";
 // class notepad
 
 export default class App {
     $target = document.createElement('div');
-    cnt: number
-    $nav
-    notepad = {tab1: 'sadfsdaf', tab2: 'tatat22222', tab3: 'asdfdsaf3333'}
-    activeTab = 'tab1'
 
     constructor($app) {
         $app.appendChild(this.$target);
-        this.cnt = 4
         this.init();
     }
 
     init() {
+        this.render();
+        new Notepad(document.querySelector('.notepad'));
+
         // this.notepad = localStorage
         // console.log(this.notepad)
         // console.log(this.notepad.keys());
-        this.render();
-        this.$nav = new Nav(document.getElementById('nav'), this.create)
+        // this.render();
+        // this.$nav = new Nav(document.getElementById('nav'), this.create)
 
     }
 
     template() {
-        const tabList = Object.keys(this.notepad).map((key) => {
-            return `
-                <button style="display: inline-block; width: 250px" onClick="this.selectTab()">${key}</button>
-            `
-        }).join('')
-
-        const tabContent = Object.entries(this.notepad).map((obj) => {
-            return this.activeTab === obj[0] ?
-                `<p>${obj[1]}</p>` : ``
-        }).join('')
-
         return `
-            <h1>Editor</h1>
-            <div id="nav"></div>
-            <br/><br/><br/>
-            <div style="display: inline-block">
-                ${tabList}
+            <h1>Text Editor</h1>
+            <div style="width: 100%">
+                <ul>
+                    <li class="newFile">새파일</li>
+                    <li class="loadFile">로드</li>
+                    <li class="save">저장</li>
+                    <li class="saveAs">다른이름으로 저장</li>
+                </ul>
             </div>
-            <div>
-                ${tabContent}
-            </div>
+            <div class="notepad"></div>
         `
+
+
+        // const tabList = Object.keys(this.notepad).map((key) => {
+        //     return `
+        //         <button style="display: inline-block; width: 250px" onClick="this.selectTab()">${key}</button>
+        //     `
+        // }).join('')
+        //
+        // const tabContent = Object.entries(this.notepad).map((obj) => {
+        //     return this.activeTab === obj[0] ?
+        //         `<p>${obj[1]}</p>` : ``
+        // }).join('')
+        //
+        // return `
+        //     <h1>Editor</h1>
+        //     <div id="nav"></div>
+        //     <br/><br/><br/>
+        //     <div style="display: inline-block">
+        //         ${tabList}
+        //     </div>
+        //     <div>
+        //         ${tabContent}
+        //     </div>
+        // `
     }
 
     render() {
         this.$target.innerHTML = this.template();
-        // this.$target.addEventListener('click', (e) => {
-        //     console.log(e.target)
-        // });
-        return
-    }
+        this.$target.addEventListener('click', (e) => {
+            const target = e.target as Element;
+            const newFile = target.closest('.newFile');
+            const loadFile = target.closest('.loadFile');
+            const save = target.closest('.save');
+            const saveAs = target.closest('.saveAs');
+            if (newFile) {
+                console.log('create');
+            }
+            if (loadFile) {
+                console.log('load');
+            }
+            if (save) {
+                console.log('save');
+            }
+            if (saveAs) {
+                console.log('saveAs');
+            }
+        });
 
-    create = () => {
-        console.log(this.notepad)
-        this.notepad['tab'+this.cnt++] = 'asdfsdaf'
-        this.init();
-    }
-
-    selectTab = () => {
-        console.log('it mine')
     }
 
 }

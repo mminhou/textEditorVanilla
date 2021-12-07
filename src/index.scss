@@ -13,15 +13,29 @@ ul {
   margin: 0;
   padding: 0;
 }
+
 ul li {
   width: 150px;
-  float: left;
+  display: inline-block;
   background: #dbdbdb;
   line-height: 2em;
-  text-align: center;
   margin: 0 5px;
-  //cursor: pointer;
 }
+
+//ul {
+//  list-style: none;
+//  margin: 0;
+//  padding: 0;
+//}
+//ul li {
+//  width: 150px;
+//  float: left;
+//  background: #dbdbdb;
+//  line-height: 2em;
+//  text-align: center;
+//  margin: 0 5px;
+//  cursor: pointer;
+//}
 //ul li span {
 //  display: block;
 //}

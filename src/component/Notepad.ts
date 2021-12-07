@@ -1,22 +1,22 @@
 export default class Notepad {
-    title
-    content
+    $target = document.createElement('div')
+    tabs: Tab[] = [];
 
-    constructor() {
-        this.title = 'new'
-        this.content = ''
+    constructor($parent) {
+        $parent.appendChild(this.$target);
+        this.init();
     }
 
-    // init() {
-    //     this.render();
-    // }
-    //
-    // template() {
-    //     return `<p>ho</p>`
-    // }
-    //
-    // render() {
-    //     this.$target.innerHTML = this.template()
-    // }
+    init() {
+        this.render();
+    }
+
+    template() {
+        return `<p>notepad</p>`
+    }
+
+    render() {
+        this.$target.innerHTML = this.template();
+    }
 
 }
