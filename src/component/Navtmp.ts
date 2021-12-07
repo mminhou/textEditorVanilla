@@ -1,6 +1,6 @@
 import Button from "@material-ui/core";
 
-export default function Nav({$app, addTabBtn, saveBtn}) {
+export default function Navtmp({$app, addTabBtn, saveBtn}) {
     this.$target = document.createElement('div');
     this.addTabBtn = addTabBtn;
     this.saveBtn = saveBtn;
