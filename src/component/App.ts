@@ -6,6 +6,7 @@ import Notepad from "./Notepad";
 
 export default class App {
     $target = document.createElement('div');
+    $notepad: Notepad
 
     constructor($app) {
         $app.appendChild(this.$target);
@@ -14,7 +15,7 @@ export default class App {
 
     init() {
         this.render();
-        new Notepad(document.querySelector('.notepad'));
+        this.$notepad = new Notepad(document.querySelector('.notepad'));
 
         // this.notepad = localStorage
         // console.log(this.notepad)
@@ -72,6 +73,7 @@ export default class App {
             const save = target.closest('.save');
             const saveAs = target.closest('.saveAs');
             if (newFile) {
+                this.$notepad.create();
                 console.log('create');
             }
             if (loadFile) {
