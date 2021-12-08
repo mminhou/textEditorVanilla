@@ -35,17 +35,17 @@ export default class Notepad {
     template() {
         const tabList = this.tabs.map((tab) => {
             return `
-                <p class="active-btn" data-title="${tab.getTabName()}" style="display: inline-block; width: 150px; border: 1px solid black; margin: 0; 
-                    color: ${this.activatedTab === tab.getTabName() ? '#FF5733' : 'black'}; ">
-                    ${tab.getTabName()}
+                <p class="active-btn" data-title="${tab.getTabTitle()}" style="display: inline-block; width: 150px; border: 1px solid black; margin: 0; 
+                    color: ${this.activatedTab === tab.getTabTitle() ? '#FF5733' : 'black'}; ">
+                    ${tab.getTabTitle()}
                     <span style="color: #FF5733">${tab.isEdited ? '#' : ''}</span>
                 </p>
-                <span class="close-btn" data-title="${tab.getTabName()}" style="padding-right: 10px;">x</span>
+                <span class="close-btn" data-title="${tab.getTabTitle()}" style="padding-right: 10px;">x</span>
             `
         }).join('')
 
         const tabContent = this.tabs.map((tab) => {
-            return tab.getTabName() === this.activatedTab ? `
+            return tab.getTabTitle() === this.activatedTab ? `
                 <textarea id="textarea" name="opinion" cols="30" rows="5" >${tab.getTabContent()}</textarea>
             ` : ``
         }).join('')
@@ -117,6 +117,7 @@ export default class Notepad {
     save() {
         const targetTab = this.tabs.find(e => e.title === this.activatedTab);
         if (targetTab) {
+            // @ts-ignore
             const curTabContent = document.getElementById('textarea').value;
             targetTab.content = curTabContent;
             targetTab.isEdited = false;
@@ -134,11 +135,13 @@ export default class Notepad {
     saveAs() {
         const targetTab = this.tabs.find(e => e.title === this.activatedTab);
         if (targetTab) {
+            // @ts-ignore
             const nextTitle = document.getElementById('input').value;
             if (this.tabs.find(e => e.title === nextTitle)) {
                 alert('Error: The title is already in use,');
                 return
             }
+            // @ts-ignore
             const curTabContent = document.getElementById('textarea').value;
             targetTab.title = nextTitle;
             targetTab.content = curTabContent;
@@ -159,14 +162,13 @@ export default class Notepad {
     activeTab(tabName: string) {
         const targetTab = this.tabs.find(e => e.title === this.activatedTab);
         if (this.tabs.includes(targetTab)) {
+            // @ts-ignore
             const curTabContent = document.getElementById('textarea').value;
             if (curTabContent !== targetTab.getTabContent()) {
                 targetTab.isEdited = true;
                 targetTab.setEditedContent(curTabContent);
             }
         }
-        console.log(this.activatedTab)
-        console.log(tabName)
         this.activatedTab = tabName;
         this.render();
     }
