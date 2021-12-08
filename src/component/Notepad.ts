@@ -30,8 +30,9 @@ export default class Notepad {
         const tabList = this.tabs.map((tab) => {
             return `
                 <p class="active-btn" data-title="${tab.getTabName()}" style="display: inline-block; width: 150px; border: 1px solid black; margin: 0; 
-                    color: ${this.activatedTab === tab.getTabName() ? 'red' : 'black'}; ">
+                    color: ${this.activatedTab === tab.getTabName() ? '#FF5733' : 'black'}; ">
                     ${tab.getTabName()}
+                    <span style="color: #FF5733">${tab.isEdited ? '#' : ''}</span>
                 </p>
                 <span class="close-btn" data-title="${tab.getTabName()}" style="padding-right: 10px;">x</span>
             `
@@ -39,7 +40,7 @@ export default class Notepad {
 
         const tabContent = this.tabs.map((tab) => {
             return tab.getTabName() === this.activatedTab ? `
-                <textarea id="textarea" name="opinion" cols="30" rows="5" >${tab.getTabContent()} </textarea>
+                <textarea id="textarea" name="opinion" cols="30" rows="5" >${tab.getTabContent()}</textarea>
             ` : ``
         }).join('')
 
@@ -88,7 +89,6 @@ export default class Notepad {
         let tab = new Tab(this.cnt++);
         this.tabs.push(tab);
         this.render();
-
     }
 
     /**
@@ -105,6 +105,14 @@ export default class Notepad {
         this.render();
     }
 
+    save() {
+        const targetTab = this.tabs.find(e => e.title === this.activatedTab);
+        const curTabContent = document.getElementById('textarea').value;
+        targetTab.content = curTabContent;
+        targetTab.isEdited = false;
+        alert('Successful save tab data');
+    }
+
     /**
      * Tab 활성화 담당 로직
      * -> 이벤트가 너무 많이 걸리는 이슈 해결중..
@@ -112,11 +120,9 @@ export default class Notepad {
      * -> 기능추가: active 할 때 textarea의 데이터와 이전 tab의 데이터 비교 -> 다르면 setEditedContent true
      */
     activeTab(tabName: string) {
-        if (this.activatedTab) {
-            const targetTab = this.tabs.find(e => e.title === this.activatedTab);
+        const targetTab = this.tabs.find(e => e.title === this.activatedTab);
+        if (this.tabs.includes(targetTab)) {
             const curTabContent = document.getElementById('textarea').value;
-            console.log(curTabContent, '#####', targetTab.getTabContent())
-            console.log(curTabContent == targetTab.getTabContent())
             if (curTabContent !== targetTab.getTabContent()) {
                 targetTab.isEdited = true;
                 targetTab.setEditedContent(curTabContent);
