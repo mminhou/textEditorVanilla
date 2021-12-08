@@ -51,7 +51,7 @@ export default class Notepad {
                 <textarea id="textarea" name="opinion" cols="100" rows="25" style="margin-bottom: 10px;">${tab.isEdited ? tab.editedContent : tab.content}</textarea>
             ` : ``
         }).join('')
-
+        
         return tabList ? `
             <div class="tab-list">
                 <h4 class="tab-list-item">${tabList}</h4>

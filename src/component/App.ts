@@ -74,6 +74,7 @@ export default class App {
             }
             if (saveAs) {
                 this.$notepad.saveAs();
+                window.location.reload();
                 console.log('saveAs');
             }
         });
