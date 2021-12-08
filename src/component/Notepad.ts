@@ -1,7 +1,7 @@
 import Tab from "./Tab";
 
 export default class Notepad {
-    $target = document.createElement('div')
+    $target = document.createElement('div');
     tabs: Tab[] = [];
     cnt: number = 0;
 
@@ -11,10 +11,10 @@ export default class Notepad {
     }
 
     init() {
-        let tab1 = new Tab(this.cnt++)
-        this.tabs.push(tab1)
-        let tab2 = new Tab(this.cnt++)
-        this.tabs.push(tab2)
+        let tab1 = new Tab(this.cnt++);
+        this.tabs.push(tab1);
+        let tab2 = new Tab(this.cnt++);
+        this.tabs.push(tab2);
         this.render();
     }
 
@@ -40,26 +40,29 @@ export default class Notepad {
     render() {
         this.$target.innerHTML = this.template();
         this.$target.addEventListener('click', (e) => {
-            const closeBtn = (e.target as Element).closest('.close-btn')
-            console.log(closeBtn)
-
+            const $closed = (e.target as Element).closest('.close-btn');
+            if (!$closed) {
+                return
+            }
+            const title = $closed.dataset.title;
+            this.close(title);
         })
-
     }
 
     create() {
         let tab = new Tab(this.cnt++);
         this.tabs.push(tab);
         this.render();
+
     }
 
     close(tabName: string) {
         const targetTab = this.tabs.find(e => e.title === tabName);
-        // this.tabs.splice(targetTab, 1)
-        console.log(targetTab);
-
+        if (!this.tabs.includes(targetTab)) {
+            return
+        }
+        const targetTabIdx = this.tabs.indexOf(targetTab);
+        this.tabs.splice(targetTabIdx, 1);
         this.render();
     }
-
-
 }
