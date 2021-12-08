@@ -1,13 +1,15 @@
 export default class Tab implements TabInterface {
     title
     content
-    isFailed
+    editedContent
+    isEdited
     isSaved
 
-    constructor(num) {
+    constructor(num: number) {
         this.title = 'new'+num;
         this.content = 'temp'+num;
-        this.isFailed = false;
+        this.editedContent = 'temp'+num;
+        this.isEdited = false;
         this.isSaved = false;
     }
 
@@ -16,6 +18,14 @@ export default class Tab implements TabInterface {
     }
 
     getTabContent(): string {
-        return this.content
+        if (this.isEdited) {
+            return this.editedContent
+        } else {
+            return this.content
+        }
+    }
+
+    setEditedContent(data: string): void {
+        this.editedContent = data;
     }
 }

@@ -39,7 +39,7 @@ export default class Notepad {
 
         const tabContent = this.tabs.map((tab) => {
             return tab.getTabName() === this.activatedTab ? `
-                <textarea name="opinion" cols="30" rows="5">${tab.content} </textarea>
+                <textarea id="textarea" name="opinion" cols="30" rows="5" >${tab.getTabContent()} </textarea>
             ` : ``
         }).join('')
 
@@ -49,7 +49,6 @@ export default class Notepad {
                 <h3>${tabList}</h3>
             <div>
             ${tabContent}
-
         ` : `<h3>Tab does not exist!</h3>`
     }
 
@@ -63,12 +62,17 @@ export default class Notepad {
             const $closed = (e.target as Element).closest('.close-btn');
             const $activate = (e.target as Element).closest('.active-btn');
             if ($closed) {
+                // @ts-ignore
                 const title = $closed.dataset.title;
                 this.closeTab(title);
                 return
             }
             if ($activate) {
+                // @ts-ignore
                 const title = $activate.dataset.title;
+                if (title === this.activatedTab) {
+                    return
+                }
                 this.activeTab(title);
                 return
             }
@@ -104,12 +108,22 @@ export default class Notepad {
     /**
      * Tab 활성화 담당 로직
      * -> 이벤트가 너무 많이 걸리는 이슈 해결중..
+     * -> 일단 render()에서 이벤트 걸어줄 때, tab이 activateTab과 같으면 넘어오지 않도록 함
+     * -> 기능추가: active 할 때 textarea의 데이터와 이전 tab의 데이터 비교 -> 다르면 setEditedContent true
      */
     activeTab(tabName: string) {
-        // 이부분 이벤트 너무 많이 걸리는데...
-        if (this.activatedTab == tabName) {
-            return
+        if (this.activatedTab) {
+            const targetTab = this.tabs.find(e => e.title === this.activatedTab);
+            const curTabContent = document.getElementById('textarea').value;
+            console.log(curTabContent, '#####', targetTab.getTabContent())
+            console.log(curTabContent == targetTab.getTabContent())
+            if (curTabContent !== targetTab.getTabContent()) {
+                targetTab.isEdited = true;
+                targetTab.setEditedContent(curTabContent);
+            }
         }
+        console.log(this.activatedTab)
+        console.log(tabName)
         this.activatedTab = tabName;
         this.render();
     }
