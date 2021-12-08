@@ -16,16 +16,20 @@ export default class Notepad {
      * 처음 한번만 호출되기 위한 Init() 함수 정의
      */
     init() {
-        localStorage.clear();
-        let tab1 = new Tab(this.cnt++);
-        this.tabs.push(tab1);
-        let tab2 = new Tab(this.cnt++);
-        this.tabs.push(tab2);
-        // JSON을 이용해 String 형식으로 만들어 localStorage에 저장
-        console.log(localStorage.setItem('tabs', JSON.stringify(this.tabs)));
+        // testing codes >>>
+        // localStorage.clear();
+        // let test: Tab[] = []
+        // let tab1 = new Tab(this.cnt++);
+        // test.push(tab1);
+        // let tab2 = new Tab(this.cnt++);
+        // test.push(tab2);
+        // // JSON을 이용해 String 형식으로 만들어 localStorage에 저장
+        // localStorage.setItem('tabs', JSON.stringify(test))
         // JSON을 통해 tabs 데이터 가져오기
-        console.log(JSON.parse(localStorage.getItem('tabs')));
-
+        // localStorage.clear();
+        // console.log(localStorage.getItem('tabs'))
+        const getTabs = JSON.parse((localStorage.getItem('tabs'))) || [];
+        this.tabs = getTabs;
         this.render();
     }
 
@@ -35,18 +39,18 @@ export default class Notepad {
     template() {
         const tabList = this.tabs.map((tab) => {
             return `
-                <p class="active-btn" data-title="${tab.getTabTitle()}" style="display: inline-block; width: 150px; border: 1px solid black; margin: 0; 
-                    color: ${this.activatedTab === tab.getTabTitle() ? '#FF5733' : 'black'}; ">
-                    ${tab.getTabTitle()}
+                <p class="active-btn" data-title="${tab.title}" style="display: inline-block; width: 150px; border: 1px solid black; margin: 0; 
+                    color: ${this.activatedTab === tab.title ? '#FF5733' : 'black'}; ">
+                    ${tab.title}
                     <span style="color: #FF5733">${tab.isEdited ? '#' : ''}</span>
                 </p>
-                <span class="close-btn" data-title="${tab.getTabTitle()}" style="padding-right: 10px;">x</span>
+                <span class="close-btn" data-title="${tab.title}" style="padding-right: 10px;">x</span>
             `
         }).join('')
 
         const tabContent = this.tabs.map((tab) => {
-            return tab.getTabTitle() === this.activatedTab ? `
-                <textarea id="textarea" name="opinion" cols="30" rows="5" >${tab.getTabContent()}</textarea>
+            return tab.title === this.activatedTab ? `
+                <textarea id="textarea" name="opinion" cols="100" rows="25" style="margin-bottom: 10px;">${tab.isEdited ? tab.editedContent : tab.content}</textarea>
             ` : ``
         }).join('')
 
@@ -92,7 +96,13 @@ export default class Notepad {
      * -> 전역 cnt를 기반으로 새로운 new+'number' tab을 생성한다.
      */
     create() {
-        let tab = new Tab(this.cnt++);
+        console.log(this.tabs);
+        let tab = new Tab(Math.floor(Math.random() * 100));
+        const chk = this.tabs.find(e => e.title === tab.title)
+        if (chk) {
+            alert('Please retry');
+            return
+        }
         this.tabs.push(tab);
         this.render();
     }
@@ -121,11 +131,12 @@ export default class Notepad {
             const curTabContent = document.getElementById('textarea').value;
             targetTab.content = curTabContent;
             targetTab.isEdited = false;
+            this.saveStorage(targetTab);
             this.render();
-            alert('Successful save tab data');
+            alert('Successful save tab data.');
 
         } else {
-            alert('Error!');
+            alert('Error: The selected tab does not exist.');
         }
     }
 
@@ -146,10 +157,11 @@ export default class Notepad {
             targetTab.title = nextTitle;
             targetTab.content = curTabContent;
             targetTab.isEdited = false;
+            this.saveStorage(targetTab);
             this.render();
-            alert('Successful save as another name');
+            alert('Successful save as another name.');
         } else {
-            alert('Error!');
+            alert('Error: The selected tab does not exist.');
         }
     }
 
@@ -164,12 +176,28 @@ export default class Notepad {
         if (this.tabs.includes(targetTab)) {
             // @ts-ignore
             const curTabContent = document.getElementById('textarea').value;
-            if (curTabContent !== targetTab.getTabContent()) {
+            if (curTabContent !== targetTab.content) {
                 targetTab.isEdited = true;
-                targetTab.setEditedContent(curTabContent);
+                targetTab.editedContent = curTabContent;
             }
         }
         this.activatedTab = tabName;
         this.render();
+    }
+
+    saveStorage(saveData: Tab) {
+        let curStorage = JSON.parse(localStorage.getItem('tabs')) || [];
+        let chk = curStorage.find(e => e.title === saveData.title)
+        if (chk) {
+            const idx = curStorage.indexOf(chk)
+            curStorage[idx] = saveData;
+        } else {
+            curStorage.push(saveData)
+        }
+        localStorage.setItem('tabs', JSON.stringify(curStorage))
+    }
+
+    load() {
+
     }
 }
