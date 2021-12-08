@@ -6,7 +6,7 @@
 
 - Tab (like VSCode)
 - open, close tab -> 👌
-- load new file -> 진행중
+- load new file -> 👌
 - save file -> 👌 => localStorage 'tabs' 저장
 - save file as another name -> 👌
 - indicator (저장되기 이전일 경우 이를 알려주는 인디케이터) -> 👌
