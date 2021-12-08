@@ -1,6 +1,7 @@
 interface TabInterface {
     title: string;
     content: string;
-    isFailed: Boolean;
+    editedContent: string;
+    isEdited: Boolean;
     isSaved: Boolean;
 }
