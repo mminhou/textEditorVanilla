@@ -1,8 +1,5 @@
-import Component from "../core/Component";
-import {$} from "../utils/util"
 import Notepad from "./Notepad";
 import Tab from "./Tab";
-// class notepad
 
 export default class App {
     $target = document.createElement('div');
@@ -17,7 +14,6 @@ export default class App {
     init() {
         this.render();
         this.$notepad = new Notepad(document.querySelector('.notepad'));
-        // this.tabs = JSON.parse(localStorage.getItem('tabs'));
     }
 
     template() {
@@ -29,7 +25,6 @@ export default class App {
 
         return `
             <h1>Text Editor</h1>
-            <form>
                 <nav role="navigation" style="width: 100%">
                     <ul>
                         <li class="newFile">새파일</li>
@@ -46,7 +41,6 @@ export default class App {
                     </ul>
                 </nav>
                 <div class="notepad"></div>
-            </form>
         `
     }
 
@@ -74,7 +68,6 @@ export default class App {
             }
             if (saveAs) {
                 this.$notepad.saveAs();
-                window.location.reload();
                 console.log('saveAs');
             }
         });

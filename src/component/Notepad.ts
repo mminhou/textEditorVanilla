@@ -15,18 +15,6 @@ export default class Notepad {
      * 처음 한번만 호출되기 위한 Init() 함수 정의
      */
     init() {
-        // testing codes >>>
-        // localStorage.clear();
-        // let test: Tab[] = []
-        // let tab1 = new Tab(this.cnt++);
-        // test.push(tab1);
-        // let tab2 = new Tab(this.cnt++);
-        // test.push(tab2);
-        // // JSON을 이용해 String 형식으로 만들어 localStorage에 저장
-        // localStorage.setItem('tabs', JSON.stringify(test))
-        // JSON을 통해 tabs 데이터 가져오기
-        // localStorage.clear();
-        // console.log(localStorage.getItem('tabs'))
         const getTabs = JSON.parse((localStorage.getItem('tabs'))) || [];
         this.tabs = getTabs;
         this.render();
@@ -44,14 +32,14 @@ export default class Notepad {
                 </p>
                 <span class="close-btn" data-title="${tab.title}" style="padding-right: 10px; border-right: 1px solid black;">x</span>
             `
-        }).join('')
+        }).join('');
 
         const tabContent = this.tabs.map((tab) => {
             return tab.title === this.activatedTab ? `
                 <textarea id="textarea" name="opinion" cols="100" rows="25" style="margin-bottom: 10px;">${tab.isEdited ? tab.editedContent : tab.content}</textarea>
             ` : ``
-        }).join('')
-        
+        }).join('');
+
         return tabList ? `
             <div class="tab-list">
                 <h4 class="tab-list-item">${tabList}</h4>
@@ -163,6 +151,7 @@ export default class Notepad {
             this.saveStorage(targetTab, prevTitle);
             this.render();
             alert('Successful save as another name.');
+            window.location.reload();
         } else {
             alert('Error: The selected tab does not exist.');
         }
@@ -214,6 +203,9 @@ export default class Notepad {
         localStorage.setItem('tabs', JSON.stringify(curStorage));
     }
 
+    /**
+     * Tab 목록 불러오는 로직 (localstorage 에서 받아옴)
+     */
     load(loadData: string) {
         let curStorage = JSON.parse(localStorage.getItem('tabs')) || [];
         const target = curStorage.find(e => e.title === loadData);
