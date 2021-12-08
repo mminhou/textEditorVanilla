@@ -13,41 +13,59 @@ body,
   margin-bottom: 20px;
 }
 
-ul {
-  list-style: none;
+input {
   margin: 0;
   padding: 0;
 }
 
-ul li {
-  width: 150px;
-  display: inline-block;
-  background: #dbdbdb;
-  line-height: 2em;
-  margin: 0 5px;
+nav {
+  font-family: monospace;
+  font-size: 15px;
+  width: 100%;
+  text-align: center;
 }
 
-//ul {
-//  list-style: none;
-//  margin: 0;
-//  padding: 0;
-//}
-//ul li {
-//  width: 150px;
-//  float: left;
-//  background: #dbdbdb;
-//  line-height: 2em;
-//  text-align: center;
-//  margin: 0 5px;
-//  cursor: pointer;
-//}
-//ul li span {
-//  display: block;
-//}
-//ul li ul {
-//  display: none;
-//}
-//
-//.show {
-//  display: block;
-//}
+ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+}
+
+li {
+  display: inline-block;
+  width: 200px;
+  padding: 1rem;
+  position: relative;
+  text-decoration: none;
+  transition-duration: 0.5s;
+}
+
+
+li:hover {
+  background: #dbdbdb;
+  cursor: pointer;
+}
+
+ul li ul {
+  background: #EAF2F8;
+  visibility: hidden;
+  opacity: 0;
+  min-width: 5rem;
+  position: absolute;
+  transition: all 0.5s ease;
+  margin-top: 1rem;
+  left: 0;
+  display: none;
+}
+
+ul li:hover > ul,
+ul li ul:hover {
+  visibility: visible;
+  opacity: 1;
+  display: block;
+}
+
+ul li ul li {
+  clear: both;
+  width: 200px;
+}
