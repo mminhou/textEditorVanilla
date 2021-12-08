@@ -69,7 +69,10 @@ li {
   .tab-list-item {
     background-color: #dbdbdb;
   }
-  h3.tab-list-item {
-    padding: 10px;
-  }
+}
+
+.active-btn {
+  display: inline-block;
+  margin: 0;
+  padding: 10px;
 }

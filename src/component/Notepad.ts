@@ -4,7 +4,6 @@ export default class Notepad {
     $target = document.createElement('div');
     tabs: Tab[] = [];
     activatedTab: string;
-    cnt: number = 0;
 
     constructor($parent) {
         $parent.appendChild(this.$target);
@@ -39,12 +38,11 @@ export default class Notepad {
     template() {
         const tabList = this.tabs.map((tab) => {
             return `
-                <p class="active-btn" data-title="${tab.title}" style="display: inline-block; width: 150px; border: 1px solid black; margin: 0; 
-                    color: ${this.activatedTab === tab.title ? '#FF5733' : 'black'}; ">
+                <p class="active-btn" data-title="${tab.title}" style="width: ${80/this.tabs.length}%; color: ${this.activatedTab === tab.title ? '#FF5733' : 'black'};">
                     ${tab.title}
-                    <span style="color: #FF5733">${tab.isEdited ? '#' : ''}</span>
+                    <span style="color: #FF5733">${tab.isEdited ? '(*)' : ''}</span>
                 </p>
-                <span class="close-btn" data-title="${tab.title}" style="padding-right: 10px;">x</span>
+                <span class="close-btn" data-title="${tab.title}" style="padding-right: 10px; border-right: 1px solid black;">x</span>
             `
         }).join('')
 
@@ -54,12 +52,13 @@ export default class Notepad {
             ` : ``
         }).join('')
 
-
         return tabList ? `
-            <div class="tab-list" style="border: 1px solid black">
-                <h3>${tabList}</h3>
+            <div class="tab-list">
+                <h4 class="tab-list-item">${tabList}</h4>
+                <div class="tab-content">
+                    ${tabContent}
+                </div>
             <div>
-            ${tabContent}
         ` : `<h3>Tab does not exist!</h3>`
     }
 
@@ -98,12 +97,13 @@ export default class Notepad {
     create() {
         console.log(this.tabs);
         let tab = new Tab(Math.floor(Math.random() * 100));
-        const chk = this.tabs.find(e => e.title === tab.title)
+        const chk = this.tabs.find(e => e.title === tab.title);
         if (chk) {
             alert('Please retry');
             return
         }
         this.tabs.push(tab);
+        this.activeTab(tab.title);
         this.render();
     }
 
@@ -131,7 +131,8 @@ export default class Notepad {
             const curTabContent = document.getElementById('textarea').value;
             targetTab.content = curTabContent;
             targetTab.isEdited = false;
-            this.saveStorage(targetTab);
+            // saveStorage 호출
+            this.saveStorage(targetTab, undefined);
             this.render();
             alert('Successful save tab data.');
 
@@ -146,6 +147,7 @@ export default class Notepad {
     saveAs() {
         const targetTab = this.tabs.find(e => e.title === this.activatedTab);
         if (targetTab) {
+            const prevTitle = targetTab.title;
             // @ts-ignore
             const nextTitle = document.getElementById('input').value;
             if (this.tabs.find(e => e.title === nextTitle)) {
@@ -157,7 +159,8 @@ export default class Notepad {
             targetTab.title = nextTitle;
             targetTab.content = curTabContent;
             targetTab.isEdited = false;
-            this.saveStorage(targetTab);
+            // saveStorage 호출
+            this.saveStorage(targetTab, prevTitle);
             this.render();
             alert('Successful save as another name.');
         } else {
@@ -172,6 +175,7 @@ export default class Notepad {
      * -> 기능추가: active 할 때 textarea의 데이터와 이전 tab의 데이터 비교 -> 다르면 setEditedContent true
      */
     activeTab(tabName: string) {
+        console.log(this.tabs);
         const targetTab = this.tabs.find(e => e.title === this.activatedTab);
         if (this.tabs.includes(targetTab)) {
             // @ts-ignore
@@ -185,19 +189,40 @@ export default class Notepad {
         this.render();
     }
 
-    saveStorage(saveData: Tab) {
+    /**
+     * save() -> saveStorage() 호출로 선택된 data만 localStorage에 저장되도록 함.
+     */
+    saveStorage(saveData: Tab, prevTitle: string) {
         let curStorage = JSON.parse(localStorage.getItem('tabs')) || [];
-        let chk = curStorage.find(e => e.title === saveData.title)
-        if (chk) {
-            const idx = curStorage.indexOf(chk)
-            curStorage[idx] = saveData;
+        if (prevTitle) {
+            let chk = curStorage.find(e => e.title === prevTitle);
+            if (chk) {
+                const idx = curStorage.indexOf(chk);
+                curStorage[idx] = saveData;
+            } else {
+                curStorage.push(saveData);
+            }
         } else {
-            curStorage.push(saveData)
+            let chk = curStorage.find(e => e.title === saveData.title);
+            if (chk) {
+                const idx = curStorage.indexOf(chk);
+                curStorage[idx] = saveData;
+            } else {
+                curStorage.push(saveData);
+            }
         }
-        localStorage.setItem('tabs', JSON.stringify(curStorage))
+        localStorage.setItem('tabs', JSON.stringify(curStorage));
     }
 
-    load() {
-
+    load(loadData: string) {
+        let curStorage = JSON.parse(localStorage.getItem('tabs')) || [];
+        const target = curStorage.find(e => e.title === loadData);
+        if (this.tabs.find(e => e.title === loadData)) {
+            this.activeTab(loadData);
+            return
+        }
+        this.tabs.push(target);
+        this.render();
+        this.activeTab(loadData);
     }
 }

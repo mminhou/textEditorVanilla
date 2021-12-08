@@ -7,13 +7,13 @@ export default class Tab implements TabInterface {
 
     constructor(num: number) {
         this.title = 'new'+num;
-        this.content = 'temp'+num;
-        this.editedContent = 'temp'+num;
+        this.content = 'You can edited this field.';
+        this.editedContent = '';
         this.isEdited = false;
         this.isSaved = false;
     }
 
-    getTabName(): string {
+    getTabTitle(): string {
         return this.title
     }
 
@@ -27,5 +27,9 @@ export default class Tab implements TabInterface {
 
     setEditedContent(data: string): void {
         this.editedContent = data;
+    }
+
+    static fromJSON(serializedJson, cnt) {
+        return Object.assign(new Tab(cnt), JSON.parse(serializedJson))
     }
 }
