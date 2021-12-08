@@ -16,10 +16,16 @@ export default class Notepad {
      * 처음 한번만 호출되기 위한 Init() 함수 정의
      */
     init() {
+        localStorage.clear();
         let tab1 = new Tab(this.cnt++);
         this.tabs.push(tab1);
         let tab2 = new Tab(this.cnt++);
         this.tabs.push(tab2);
+        // JSON을 이용해 String 형식으로 만들어 localStorage에 저장
+        console.log(localStorage.setItem('tabs', JSON.stringify(this.tabs)));
+        // JSON을 통해 tabs 데이터 가져오기
+        console.log(JSON.parse(localStorage.getItem('tabs')));
+
         this.render();
     }
 
@@ -105,12 +111,43 @@ export default class Notepad {
         this.render();
     }
 
+    /**
+     * Tab content 저장 로직
+     */
     save() {
         const targetTab = this.tabs.find(e => e.title === this.activatedTab);
-        const curTabContent = document.getElementById('textarea').value;
-        targetTab.content = curTabContent;
-        targetTab.isEdited = false;
-        alert('Successful save tab data');
+        if (targetTab) {
+            const curTabContent = document.getElementById('textarea').value;
+            targetTab.content = curTabContent;
+            targetTab.isEdited = false;
+            this.render();
+            alert('Successful save tab data');
+
+        } else {
+            alert('Error!');
+        }
+    }
+
+    /**
+     * Tab 을 다른 이름으로 저장하기 위한 로직
+     */
+    saveAs() {
+        const targetTab = this.tabs.find(e => e.title === this.activatedTab);
+        if (targetTab) {
+            const nextTitle = document.getElementById('input').value;
+            if (this.tabs.find(e => e.title === nextTitle)) {
+                alert('Error: The title is already in use,');
+                return
+            }
+            const curTabContent = document.getElementById('textarea').value;
+            targetTab.title = nextTitle;
+            targetTab.content = curTabContent;
+            targetTab.isEdited = false;
+            this.render();
+            alert('Successful save as another name');
+        } else {
+            alert('Error!');
+        }
     }
 
     /**
