@@ -54,21 +54,17 @@ export default class App {
             const saveAs = target.closest('.saveAs');
             if (newFile) {
                 this.$notepad.create();
-                console.log('create');
             }
             if (loadFile) {
                 // @ts-ignore
                 this.$notepad.load(loadFile.dataset.title)
-                console.log('load');
             }
             if (save) {
                 this.$notepad.save();
                 window.location.reload();
-                console.log('save');
             }
             if (saveAs) {
                 this.$notepad.saveAs();
-                console.log('saveAs');
             }
         });
     }

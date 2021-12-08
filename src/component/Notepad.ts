@@ -83,7 +83,6 @@ export default class Notepad {
      * -> 전역 cnt를 기반으로 새로운 new+'number' tab을 생성한다.
      */
     create() {
-        console.log(this.tabs);
         let tab = new Tab(Math.floor(Math.random() * 100));
         const chk = this.tabs.find(e => e.title === tab.title);
         if (chk) {
@@ -164,7 +163,6 @@ export default class Notepad {
      * -> 기능추가: active 할 때 textarea의 데이터와 이전 tab의 데이터 비교 -> 다르면 setEditedContent true
      */
     activeTab(tabName: string) {
-        console.log(this.tabs);
         const targetTab = this.tabs.find(e => e.title === this.activatedTab);
         if (this.tabs.includes(targetTab)) {
             // @ts-ignore
